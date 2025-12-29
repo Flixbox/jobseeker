@@ -4,7 +4,9 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"start": "bun run src/index.ts"
+		"start": "cmd /c start hotkeys.ahk",
+		"paste": "bun run src/index.ts paste",
+		"process": "bun run src/index.ts process"
 	},
 	"devDependencies": {
 		"@types/bun": "latest"
