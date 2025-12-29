@@ -1,6 +1,8 @@
 import { user32 } from "./winapi";
 
 const VK_CONTROL = 0x11;
+const VK_F1 = 0x70;
+const VK_F2 = 0x71;
 const VK_V = 0x56;
 const KEYEVENTF_KEYUP = 0x0002;
 
@@ -9,13 +11,19 @@ const KEYEVENTF_KEYUP = 0x0002;
  * We wait for the user to release keys first to avoid conflicts.
  */
 export async function simulatePaste() {
-	// Wait for CTRL to be released by the user
-	console.log("Waiting for user to release CTRL...");
+	console.log("Waiting for user to release all trigger keys (CTRL, F1, F2)...");
 	let timeout = 100; // max wait 1s
+	const keysToWait = [VK_CONTROL, VK_F1, VK_F2];
+
 	while (timeout > 0) {
-		// High bit is set if the key is down
-		const state = user32.symbols.GetAsyncKeyState(VK_CONTROL);
-		if (!(state & 0x8000)) break;
+		let anyKeyDown = false;
+		for (const vk of keysToWait) {
+			if (user32.symbols.GetAsyncKeyState(vk) & 0x8000) {
+				anyKeyDown = true;
+				break;
+			}
+		}
+		if (!anyKeyDown) break;
 		await new Promise((r) => setTimeout(r, 10));
 		timeout--;
 	}
@@ -23,18 +31,13 @@ export async function simulatePaste() {
 	// Extra safety buffer
 	await new Promise((r) => setTimeout(r, 100));
 
-	console.log("Simulating paste...");
-
-	// Ensure CTRL is down
+	console.log("Simulating paste (CTRL+V)...");
+	// ... rest of the logic
 	user32.symbols.keybd_event(VK_CONTROL, 0, 0, 0);
 	await new Promise((r) => setTimeout(r, 20));
-
-	// Press and release V
 	user32.symbols.keybd_event(VK_V, 0, 0, 0);
 	await new Promise((r) => setTimeout(r, 20));
 	user32.symbols.keybd_event(VK_V, 0, KEYEVENTF_KEYUP, 0);
 	await new Promise((r) => setTimeout(r, 20));
-
-	// Release CTRL
 	user32.symbols.keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0);
 }

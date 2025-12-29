@@ -49,7 +49,7 @@ Rules:
 - "post_profit": true if NOT a pre-profit startup / living off investor funds [Series B+ is OK].
 - "appropriate_industry": false if gambling, gaming, tobacco, alcohol.
 - "calm_environment": false if the ad contains red flags or toxic language like "Don't apply if you want a slow, stable 9–5".
-- "suggested_salary": Format: "💵74k / 74k-80k".
+- "suggested_salary": Exact format: "💵74k / 74k-80k". First a fixed salary, then range.
 - "expected_documents": e.g. "CV, Cover Letter, Salary Expectations".
 - "application_medium": e.g. "Email, Quick Apply" / "Company Portal".
 - "red_flags": Array of strings that are red flags for the job. Example: ["Customer presence expected", "Angular role", "Back-end heavy"]
