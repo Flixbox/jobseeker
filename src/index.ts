@@ -11,8 +11,8 @@ const VK_F1 = 0x70;
 const VK_F2 = 0x71;
 const WM_HOTKEY = 0x0312;
 
-const ID_CTRL_F1 = 1001;
-const ID_CTRL_F2 = 1002;
+const ID_CTRL_F1 = 0x1111;
+const ID_CTRL_F2 = 0x2222;
 
 // Resolve path relative to the script's directory for robustness
 const PROMPT_FILE = join(import.meta.dir, "../assets/jobseeking_prompt.md");
@@ -44,7 +44,7 @@ async function runner() {
 		console.log("Press CTRL+F2 to process job data from clipboard");
 		console.log("Press CTRL+C in this terminal to exit");
 
-		// Deregister any existing hotkeys with these IDs for this thread (best effort)
+		// Deregister any existing hotkeys with these IDs
 		user32.symbols.UnregisterHotKey(null, ID_CTRL_F1);
 		user32.symbols.UnregisterHotKey(null, ID_CTRL_F2);
 
@@ -63,6 +63,7 @@ async function runner() {
 		);
 
 		if (!ok1 || !ok2) {
+			console.error(`Status: F1=${ok1}, F2=${ok2}`);
 			throw new Error(
 				"Failed to register hotkeys. They are likely being used by another application.",
 			);
@@ -77,53 +78,42 @@ async function runner() {
 			process.exit(0);
 		});
 
-		// MSG structure buffer (48-64 bytes is enough)
 		const msgBuffer = new Uint8Array(64);
 		const msgPtr = ptr(msgBuffer);
 
 		// Message Loop
 		while (true) {
-			// Clear buffer before each call
-			msgBuffer.fill(0);
-
 			// GetMessageW blocks until a message is available
 			const res = await user32.symbols.GetMessageW(msgPtr, null, 0, 0);
 			if (res < 0) {
 				console.error("GetMessageW error:", res);
 				break;
 			}
-			if (res === 0) {
-				console.log("WM_QUIT received. Exiting...");
-				break;
-			}
+			if (res === 0) break;
 
 			const view = new DataView(msgBuffer.buffer);
 			const message = view.getUint32(8, true);
 
 			if (message === WM_HOTKEY) {
-				// wParam is at offset 16. For hotkeys, it's the 32-bit ID.
-				const id = view.getUint32(16, true);
-				// lParam is at offset 24. Modifiers (low word), VK (high word).
+				// wParam is the hotkey ID
+				const id = Number(view.getBigUint64(16, true) & 0xffffffffn);
+				// lParam: modifiers (low), vk (high)
 				const lParam = view.getBigUint64(24, true);
 				const vk = Number((lParam >> 16n) & 0xffffn);
 
-				console.log(`WM_HOTKEY: Received ID=${id}, VK=0x${vk.toString(16)}`);
+				const time = new Date().toLocaleTimeString();
+				console.log(
+					`[${time}] Hotkey Event: ID=${id}, VK=0x${vk.toString(16)}`,
+				);
 
 				if (id === ID_CTRL_F1) {
-					console.log("Matched ID_CTRL_F1 (1001)");
+					console.log("Action: Triggering handleCtrlF1");
 					await handleCtrlF1();
 				} else if (id === ID_CTRL_F2) {
-					console.log("Matched ID_CTRL_F2 (1002)");
+					console.log("Action: Triggering handleCtrlF2");
 					await handleCtrlF2();
 				} else {
-					console.log(`Unknown ID ${id}. Checking VK fallback...`);
-					if (vk === VK_F1) {
-						console.log("Matched VK_F1 (0x70) fallback");
-						await handleCtrlF1();
-					} else if (vk === VK_F2) {
-						console.log("Matched VK_F2 (0x71) fallback");
-						await handleCtrlF2();
-					}
+					console.log("Action: Unknown Hotkey ID, skipping.");
 				}
 			}
 
