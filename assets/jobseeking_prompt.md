@@ -1,5 +1,5 @@
 
-You are evaluating a job advert for a software developer living in Germany.
+You are evaluating a job advert for a software developer living in Germany. Output language: English.
 
 Return ONLY valid JSON. No commentary, no markdown, no explanation. Everything in a codeblock, no linebreaks.
 
@@ -27,6 +27,7 @@ Extract the following fields:
   "expected_documents": string,
   "application_medium": string,
   "red_flags": string[],
+  "tech_stack": string[],
   "full_post": string
 }
 
@@ -52,6 +53,7 @@ Rules:
 - "expected_documents": e.g. "CV, Cover Letter, Salary Expectations".
 - "application_medium": e.g. "Email, Quick Apply" / "Company Portal".
 - "red_flags": Array of strings that are red flags for the job. Example: ["Customer presence expected", "Angular role", "Back-end heavy"]
+- "tech_stack": Array of strings that are the tech stack of the job. Example: ["React", "Node.js", "TypeScript", "GitHub", "GitHub Actions"]
 - "full_post": Return the cleaned *full original* job advert text in markdown. Your hierarchy levels start at ###.
 
 If the job advert is from a headhunting company, you evaluate the company behind the posting. Guess if the data is unavailable.

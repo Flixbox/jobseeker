@@ -25,6 +25,7 @@ export interface JobData {
 	expected_documents: string;
 	application_medium: string;
 	red_flags: string[];
+	tech_stack: string[];
 	full_post: string;
 }
 
@@ -73,6 +74,7 @@ export function processJobData(input: string) {
 			expected_documents,
 			application_medium,
 			red_flags,
+			tech_stack,
 			full_post,
 		} = data;
 
@@ -122,6 +124,10 @@ ${forum_vibe}
 ## Red Flags
 
 ${(red_flags || []).map((flag) => `🚩 ${flag}`).join("\n")}
+
+## Tech Stack
+
+${(tech_stack || []).map((tech) => `- ${tech}`).join("\n")}
 
 ---
 
