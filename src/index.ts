@@ -83,29 +83,47 @@ async function runner() {
 
 		// Message Loop
 		while (true) {
+			// Clear buffer before each call
+			msgBuffer.fill(0);
+
 			// GetMessageW blocks until a message is available
 			const res = await user32.symbols.GetMessageW(msgPtr, null, 0, 0);
-			if (res <= 0) break;
+			if (res < 0) {
+				console.error("GetMessageW error:", res);
+				break;
+			}
+			if (res === 0) {
+				console.log("WM_QUIT received. Exiting...");
+				break;
+			}
 
 			const view = new DataView(msgBuffer.buffer);
 			const message = view.getUint32(8, true);
 
 			if (message === WM_HOTKEY) {
-				const id = Number(view.getBigUint64(16, true));
-				const lowId = view.getUint32(16, true);
+				// wParam is at offset 16. For hotkeys, it's the 32-bit ID.
+				const id = view.getUint32(16, true);
+				// lParam is at offset 24. Modifiers (low word), VK (high word).
 				const lParam = view.getBigUint64(24, true);
-
-				// lParam low word: modifiers, high word: virtual key
 				const vk = Number((lParam >> 16n) & 0xffffn);
 
-				console.log(`WM_HOTKEY: id=${id}, vk=0x${vk.toString(16)}`);
+				console.log(`WM_HOTKEY: Received ID=${id}, VK=0x${vk.toString(16)}`);
 
-				if (id === ID_CTRL_F1 || lowId === ID_CTRL_F1 || vk === VK_F1) {
+				if (id === ID_CTRL_F1) {
+					console.log("Matched ID_CTRL_F1 (1001)");
 					await handleCtrlF1();
-				} else if (id === ID_CTRL_F2 || lowId === ID_CTRL_F2 || vk === VK_F2) {
+				} else if (id === ID_CTRL_F2) {
+					console.log("Matched ID_CTRL_F2 (1002)");
 					await handleCtrlF2();
 				} else {
-					console.log(`Unknown Hotkey ID: ${id}, VK: 0x${vk.toString(16)}`);
+					console.log(`Unknown ID ${id}. Checking VK fallback...`);
+					if (vk === VK_F1) {
+						console.log("Matched VK_F1 (0x70) fallback");
+						await handleCtrlF1();
+					} else if (vk === VK_F2) {
+						console.log("Matched VK_F2 (0x71) fallback");
+						await handleCtrlF2();
+					}
 				}
 			}
 
