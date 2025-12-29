@@ -1,7 +1,7 @@
 import { writeFileSync } from "fs";
 import { join } from "path";
 
-const VAULT_PATH = "C:\\_dev\\obsidian\\Jobseeker"; // adjust as per original index.ts
+const VAULT_PATH = process.env.VAULT_PATH || join(process.cwd(), "vault");
 
 export interface JobData {
 	company_name: string;
