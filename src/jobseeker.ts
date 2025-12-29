@@ -29,8 +29,27 @@ export interface JobData {
 }
 
 export function processJobData(input: string) {
+	let sanitizedInput = input.trim();
+
+	// Check for a common artifact where an extra closing brace is appended
+	if (sanitizedInput.endsWith("}")) {
+		try {
+			// If it doesn't parse but would parse without the last brace
+			JSON.parse(sanitizedInput);
+		} catch {
+			const stripped = sanitizedInput.slice(0, -1).trim();
+			try {
+				JSON.parse(stripped);
+				sanitizedInput = stripped;
+				console.log("ℹ️ Automatically removed extra trailing '}' from input.");
+			} catch {
+				// Both versions are invalid, let the original parse fail below
+			}
+		}
+	}
+
 	try {
-		const data: JobData = JSON.parse(input);
+		const data: JobData = JSON.parse(sanitizedInput);
 
 		const {
 			company_name,
