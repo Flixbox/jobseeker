@@ -7,8 +7,10 @@ Extract the following fields:
 
 {
   "company_name": string,
+  "num_employees": number,
   "job_title": string,
   "applied": true,
+  "forum_vibe": string,
   "forum_vibe_rating": number, 
   "is_dev_position": boolean,
   "not_team_lead_position": boolean,
@@ -25,13 +27,16 @@ Extract the following fields:
   "suggested_salary": string,
   "expected_documents": string,
   "application_medium": string,
+  "red_flags": string[],
   "full_post": string
 }
 
 Rules:
 
 - "company_name": The company behind the position. Fallback: The headhunting company. 
-- "forum_vibe_rating": Estimate from forum/kununu/company reputation. 0 = terrible, 100 = excellent. If no data exists, guess based on tone.
+- "num_employees": Number of employees of the company. If no data exists, guess based on company size or online data.
+- "forum_vibe": Estimate textually from forum/kununu/company reputation. If no data exists, guess based on tone.
+- "forum_vibe_rating": Estimate numerically from forum/kununu/company reputation. 0 = terrible, 100 = excellent. If no data exists, guess based on tone.
 - "is_dev_position": true if it's a software development role.
 - "not_team_lead_position": true if it's NOT a team lead/management role.
 - "not_team_lead_growth_expectation": true if the ad does NOT expect growth into management.
@@ -47,7 +52,8 @@ Rules:
 - "suggested_salary": Format: "💵74k / 74k-80k".
 - "expected_documents": e.g. "CV, Cover Letter, Salary Expectations".
 - "application_medium": e.g. "Email, Quick Apply" / "Company Portal".
-- "full_post": Return the cleaned *full original* job advert text in markdown.
+- "red_flags": Array of strings that are red flags for the job. Example: ["Customer presence expected", "Angular role", "Back-end heavy"]
+- "full_post": Return the cleaned *full original* job advert text in markdown. Your hierarchy levels start at ###.
 
 If the job advert is from a headhunting company, you evaluate the company behind the posting. Guess if the data is unavailable.
 

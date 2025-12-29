@@ -5,8 +5,10 @@ const VAULT_PATH = "C:\\_dev\\obsidian"; // adjust as per original index.ts
 
 export interface JobData {
 	company_name: string;
+	num_employees: number;
 	job_title: string;
 	applied: boolean;
+	forum_vibe: string;
 	forum_vibe_rating: number;
 	is_dev_position: boolean;
 	not_team_lead_position: boolean;
@@ -23,6 +25,7 @@ export interface JobData {
 	suggested_salary: string;
 	expected_documents: string;
 	application_medium: string;
+	red_flags: string[];
 	full_post: string;
 }
 
@@ -32,8 +35,10 @@ export function processJobData(input: string) {
 
 		const {
 			company_name,
+			num_employees,
 			job_title,
 			applied,
+			forum_vibe,
 			forum_vibe_rating,
 			is_dev_position,
 			not_team_lead_position,
@@ -50,6 +55,7 @@ export function processJobData(input: string) {
 			suggested_salary,
 			expected_documents,
 			application_medium,
+			red_flags,
 			full_post,
 		} = data;
 
@@ -67,8 +73,10 @@ export function processJobData(input: string) {
 
 		const md = `---
 company_name: "${safeCompany}"
+num_employees: ${num_employees}
 job_title: "${safeTitle}"
 applied: ${applied}
+forum_vibe: ${forum_vibe}
 forum_vibe_rating: ${forum_vibe_rating}
 is_dev_position: ${is_dev_position}
 not_team_lead_position: ${not_team_lead_position}
@@ -85,37 +93,25 @@ calm_environment: ${calm_environment}
 suggested_salary: "${suggested_salary}"
 expected_documents: "${expected_documents}"
 application_medium: "${application_medium}"
+red_flags: ${red_flags}
 ---
 
 # Job Evaluation — ${safeCompany} / ${safeTitle}
 
-## Summary Table
-| Field | Value |
-|-------|-------|
-| Applied | ${applied} |
-| Forum Vibe Rating | ${forum_vibe_rating} |
-| Dev Position | ${is_dev_position} |
-| Not Team Lead | ${not_team_lead_position} |
-| No Team Lead Growth Expectation | ${not_team_lead_growth_expectation} |
-| React Role | ${is_react_role} |
-| Modern Tech | ${is_modern_tech_role} |
-| Fully Remote | ${fully_remote} |
-| Occasional Onsite | ${occasional_onsite_expected} |
-| Weekly Onsite | ${weekly_onsite_expected} |
-| Inhouse Position | ${inhouse_position} |
-| Post-Profit | ${post_profit} |
-| Appropriate Industry | ${appropriate_industry} |
-| Calm Environment | ${calm_environment} |
-| Suggested Salary | ${suggested_salary} |
-| Expected Documents | ${expected_documents} |
-| Application Medium | ${application_medium} |
+## Forum Vibe
+
+${forum_vibe}
+
+## Red Flags
+
+${(red_flags || []).map((flag) => `🚩 ${flag}`).join("\n")}
 
 ---
 
 ## Full Job Post
-\`\`\`
+
 ${full_post}
-\`\`\`
+
 `;
 
 		writeFileSync(filePath, md, "utf8");
