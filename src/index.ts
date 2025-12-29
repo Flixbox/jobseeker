@@ -92,14 +92,20 @@ async function runner() {
 
 			if (message === WM_HOTKEY) {
 				const id = Number(view.getBigUint64(16, true));
-				console.log(`WM_HOTKEY received. ID: ${id}`);
+				const lowId = view.getUint32(16, true);
+				const lParam = view.getBigUint64(24, true);
 
-				if (id === ID_CTRL_F1) {
+				// lParam low word: modifiers, high word: virtual key
+				const vk = Number((lParam >> 16n) & 0xffffn);
+
+				console.log(`WM_HOTKEY: id=${id}, vk=0x${vk.toString(16)}`);
+
+				if (id === ID_CTRL_F1 || lowId === ID_CTRL_F1 || vk === VK_F1) {
 					await handleCtrlF1();
-				} else if (id === ID_CTRL_F2) {
-					handleCtrlF2();
+				} else if (id === ID_CTRL_F2 || lowId === ID_CTRL_F2 || vk === VK_F2) {
+					await handleCtrlF2();
 				} else {
-					console.log(`Unknown Hotkey ID: ${id}`);
+					console.log(`Unknown Hotkey ID: ${id}, VK: 0x${vk.toString(16)}`);
 				}
 			}
 
@@ -148,7 +154,7 @@ async function handleCtrlF1() {
 	}
 }
 
-function handleCtrlF2() {
+async function handleCtrlF2() {
 	console.log("Hotkey: CTRL+F2 triggered");
 	try {
 		const clipboardContent = getClipboardText();
