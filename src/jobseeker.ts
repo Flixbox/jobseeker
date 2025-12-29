@@ -7,7 +7,6 @@ export interface JobData {
 	company_name: string;
 	num_employees: number;
 	job_title: string;
-	applied: boolean;
 	forum_vibe: string;
 	forum_vibe_rating: number;
 	is_dev_position: boolean;
@@ -37,7 +36,6 @@ export function processJobData(input: string) {
 			company_name,
 			num_employees,
 			job_title,
-			applied,
 			forum_vibe,
 			forum_vibe_rating,
 			is_dev_position,
@@ -75,7 +73,7 @@ export function processJobData(input: string) {
 company_name: "${safeCompany}"
 num_employees: ${num_employees}
 job_title: "${safeTitle}"
-applied: ${applied}
+applied: false
 forum_vibe: ${forum_vibe}
 forum_vibe_rating: ${forum_vibe_rating}
 is_dev_position: ${is_dev_position}

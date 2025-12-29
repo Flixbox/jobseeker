@@ -9,7 +9,6 @@ Extract the following fields:
   "company_name": string,
   "num_employees": number,
   "job_title": string,
-  "applied": true,
   "forum_vibe": string,
   "forum_vibe_rating": number, 
   "is_dev_position": boolean,
