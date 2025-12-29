@@ -26,6 +26,14 @@ const user32 = dlopen("user32.dll", {
 		args: [FFIType.u8, FFIType.u8, FFIType.u32, FFIType.u64],
 		returns: FFIType.void,
 	},
+	GetAsyncKeyState: {
+		args: [FFIType.i32],
+		returns: FFIType.u16,
+	},
+	MessageBeep: {
+		args: [FFIType.u32],
+		returns: FFIType.i32,
+	},
 });
 
 export { user32 };

@@ -2,7 +2,7 @@ import { user32 } from "./utils/winapi";
 import { getClipboardText, setClipboardText } from "./utils/clipboard";
 import { simulatePaste } from "./utils/keyboard";
 import { processJobData } from "./jobseeker";
-import { readFileSync, existsSync } from "fs";
+import { readFileSync, existsSync, writeFileSync } from "fs";
 import { ptr } from "bun:ffi";
 import { join } from "path";
 
@@ -18,72 +18,97 @@ const ID_CTRL_F2 = 2;
 const PROMPT_FILE = join(import.meta.dir, "../assets/jobseeking_prompt.md");
 
 async function runner() {
-	console.log("🚀 JobSeeker Background Script Started");
-	console.log("Press CTRL+F1 to paste formatted prompt");
-	console.log("Press CTRL+F2 to process job data from clipboard");
-	console.log("Press CTRL+C in this terminal to exit");
+	try {
+		console.log("🚀 JobSeeker Background Script Started");
 
-	// Deregister any existing hotkeys with these IDs for this thread (best effort)
-	user32.symbols.UnregisterHotKey(null, ID_CTRL_F1);
-	user32.symbols.UnregisterHotKey(null, ID_CTRL_F2);
-
-	// Register Hotkeys
-	const ok1 = user32.symbols.RegisterHotKey(
-		null,
-		ID_CTRL_F1,
-		MOD_CONTROL,
-		VK_F1,
-	);
-	const ok2 = user32.symbols.RegisterHotKey(
-		null,
-		ID_CTRL_F2,
-		MOD_CONTROL,
-		VK_F2,
-	);
-
-	if (!ok1 || !ok2) {
-		console.error("❌ Failed to register hotkeys.");
-		console.error(
-			"Reason: Hotkeys are likely being used by another application (or a hanging instance of this script).",
-		);
-		console.log("Try closing other instances or changing the hotkeys.");
-		process.exit(1);
-	}
-
-	console.log("✅ Hotkeys registered successfully.");
-
-	process.on("SIGINT", () => {
-		console.log("\nCleanup: Unregistering hotkeys...");
-		user32.symbols.UnregisterHotKey(null, ID_CTRL_F1);
-		user32.symbols.UnregisterHotKey(null, ID_CTRL_F2);
-		process.exit(0);
-	});
-
-	// MSG structure buffer (48-64 bytes is enough)
-	const msgBuffer = new Uint8Array(64);
-	const msgPtr = ptr(msgBuffer);
-
-	// Message Loop
-	while (true) {
-		// GetMessageW blocks until a message is available
-		const res = await user32.symbols.GetMessageW(msgPtr, null, 0, 0);
-		if (res <= 0) break;
-
-		const view = new DataView(msgBuffer.buffer);
-		const message = view.getUint32(8, true);
-
-		if (message === WM_HOTKEY) {
-			const id = Number(view.getBigUint64(16, true));
-
-			if (id === ID_CTRL_F1) {
-				await handleCtrlF1();
-			} else if (id === ID_CTRL_F2) {
-				handleCtrlF2();
+		// Auto-cleanup existing instances using a PID file
+		const pidFile = join(process.cwd(), ".jobseeker.pid.tmp");
+		try {
+			if (existsSync(pidFile)) {
+				const oldPid = parseInt(readFileSync(pidFile, "utf-8").trim());
+				if (oldPid && oldPid !== process.pid) {
+					console.log(`Cleaning up old instance (PID: ${oldPid})...`);
+					try {
+						process.kill(oldPid, "SIGKILL");
+					} catch {
+						// PID might not exist anymore
+					}
+				}
 			}
+			writeFileSync(pidFile, process.pid.toString(), "utf-8");
+		} catch {
+			console.error("Warning: Could not handle PID file cleanup.");
 		}
 
-		user32.symbols.TranslateMessage(msgPtr);
-		user32.symbols.DispatchMessageW(msgPtr);
+		console.log("Press CTRL+F1 to paste formatted prompt");
+		console.log("Press CTRL+F2 to process job data from clipboard");
+		console.log("Press CTRL+C in this terminal to exit");
+
+		// Deregister any existing hotkeys with these IDs for this thread (best effort)
+		user32.symbols.UnregisterHotKey(null, ID_CTRL_F1);
+		user32.symbols.UnregisterHotKey(null, ID_CTRL_F2);
+
+		// Register Hotkeys
+		const ok1 = user32.symbols.RegisterHotKey(
+			null,
+			ID_CTRL_F1,
+			MOD_CONTROL,
+			VK_F1,
+		);
+		const ok2 = user32.symbols.RegisterHotKey(
+			null,
+			ID_CTRL_F2,
+			MOD_CONTROL,
+			VK_F2,
+		);
+
+		if (!ok1 || !ok2) {
+			throw new Error(
+				"Failed to register hotkeys. They are likely being used by another application.",
+			);
+		}
+
+		console.log("✅ Hotkeys registered successfully.");
+
+		process.on("SIGINT", () => {
+			console.log("\nCleanup: Unregistering hotkeys...");
+			user32.symbols.UnregisterHotKey(null, ID_CTRL_F1);
+			user32.symbols.UnregisterHotKey(null, ID_CTRL_F2);
+			process.exit(0);
+		});
+
+		// MSG structure buffer (48-64 bytes is enough)
+		const msgBuffer = new Uint8Array(64);
+		const msgPtr = ptr(msgBuffer);
+
+		// Message Loop
+		while (true) {
+			// GetMessageW blocks until a message is available
+			const res = await user32.symbols.GetMessageW(msgPtr, null, 0, 0);
+			if (res <= 0) break;
+
+			const view = new DataView(msgBuffer.buffer);
+			const message = view.getUint32(8, true);
+
+			if (message === WM_HOTKEY) {
+				const id = Number(view.getBigUint64(16, true));
+
+				if (id === ID_CTRL_F1) await handleCtrlF1();
+				else if (id === ID_CTRL_F2) handleCtrlF2();
+			}
+
+			user32.symbols.TranslateMessage(msgPtr);
+			user32.symbols.DispatchMessageW(msgPtr);
+		}
+	} catch (err: unknown) {
+		console.error("FATAL ERROR in runner:");
+		if (err instanceof Error) {
+			console.error(err.message);
+			console.error(err.stack);
+		} else {
+			console.error(err);
+		}
+		process.exit(1);
 	}
 }
 
@@ -99,12 +124,16 @@ async function handleCtrlF1() {
 		let prompt = readFileSync(PROMPT_FILE, "utf-8");
 		prompt = prompt.replace("<<clipboard>>", clipboardContent);
 
+		console.log(`Setting clipboard to prompt (${prompt.length} chars)...`);
 		setClipboardText(prompt);
 
-		// Brief delay to let clipboard settle
-		await new Promise((r) => setTimeout(r, 100));
+		// Beep so user knows it's doing something
+		user32.symbols.MessageBeep(0);
 
-		simulatePaste();
+		// Brief delay to let clipboard settle
+		await new Promise((r) => setTimeout(r, 150));
+
+		await simulatePaste();
 		console.log("✅ Prompt pasted.");
 	} catch (err: unknown) {
 		if (err instanceof Error) {
