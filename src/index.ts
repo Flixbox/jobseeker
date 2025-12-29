@@ -11,8 +11,8 @@ const VK_F1 = 0x70;
 const VK_F2 = 0x71;
 const WM_HOTKEY = 0x0312;
 
-const ID_CTRL_F1 = 1;
-const ID_CTRL_F2 = 2;
+const ID_CTRL_F1 = 1001;
+const ID_CTRL_F2 = 1002;
 
 // Resolve path relative to the script's directory for robustness
 const PROMPT_FILE = join(import.meta.dir, "../assets/jobseeking_prompt.md");
@@ -92,9 +92,15 @@ async function runner() {
 
 			if (message === WM_HOTKEY) {
 				const id = Number(view.getBigUint64(16, true));
+				console.log(`WM_HOTKEY received. ID: ${id}`);
 
-				if (id === ID_CTRL_F1) await handleCtrlF1();
-				else if (id === ID_CTRL_F2) handleCtrlF2();
+				if (id === ID_CTRL_F1) {
+					await handleCtrlF1();
+				} else if (id === ID_CTRL_F2) {
+					handleCtrlF2();
+				} else {
+					console.log(`Unknown Hotkey ID: ${id}`);
+				}
 			}
 
 			user32.symbols.TranslateMessage(msgPtr);
