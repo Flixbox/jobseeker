@@ -52,7 +52,7 @@ Rules:
 - "suggested_salary": Exact format: "💵74k / 74k-80k". First a fixed salary, then range.
 - "expected_documents": e.g. "CV, Cover Letter, Salary Expectations".
 - "application_medium": e.g. "Email, Quick Apply" / "Company Portal".
-- "red_flags": Array of strings that are potential issues or mis-matches for the job. Example: ["Customer presence expected", "Angular role", "Back-end heavy"]
+- "red_flags": Array of strings that are potential issues or mis-matches for the job. Example: ["Customer presence expected", "On-Site meetings", "Angular role", "Back-end heavy"]
 - "tech_stack": Array of strings that are the tech stack of the job. Example: ["React", "Node.js", "TypeScript", "GitHub", "GitHub Actions"]
 - "full_post": Return the cleaned *full original* job advert text in markdown. Your hierarchy levels start at ###.
 
