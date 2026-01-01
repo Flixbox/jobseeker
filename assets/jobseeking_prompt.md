@@ -54,7 +54,7 @@ Rules:
 - "application_medium": e.g. "Email, Quick Apply" / "Company Portal".
 - "red_flags": Array of strings that are potential issues or mis-matches for the job. Be critical and attentive to specific wording like "Remote work can be discussed" (red flag!). Example: ["Customer presence expected", "On-Site meetings", "Angular role", "Back-end heavy"]
 - "tech_stack": Array of strings that are the tech stack of the job. Example: ["React", "Node.js", "TypeScript", "GitHub", "GitHub Actions"]
-- "full_post": Return the cleaned *full original* job advert text in markdown. This may be long with linebreaks as `\n\n` but that's ok. Your hierarchy levels start at ###.
+- "full_post": Return the cleaned *full original* job advert text in markdown. Then add a markdown line `---` and append any other relevant formatted details. This may be long with linebreaks as `\n\n` but that's ok. Your hierarchy levels start at ###. 
 
 If the job advert is from a headhunting company, you evaluate the company behind the posting. Guess if the data is unavailable.
 
