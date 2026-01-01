@@ -33,7 +33,7 @@ Extract the following fields:
 
 Rules:
 
-- "company_name": The company behind the position. Fallback: The headhunting company. 
+- "company_name": The company behind the position. Fallback: `Unknown company (via ...)`. 
 - "num_employees": Number of employees of the company. If no data exists, guess based on company size or online data.
 - "forum_vibe": Estimate textually from forum/kununu/company reputation. If no data exists, guess based on tone.
 - "forum_vibe_rating": Estimate numerically from forum/kununu/company reputation. 0 = terrible, 100 = excellent. If no data exists, guess based on tone.
