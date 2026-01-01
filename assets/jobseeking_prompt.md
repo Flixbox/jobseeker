@@ -19,6 +19,7 @@ Extract the following fields:
   "fully_remote": boolean,
   "occasional_onsite_expected": boolean,
   "weekly_onsite_expected": boolean,
+  "german_employment_contract": boolean,
   "inhouse_position": boolean,
   "post_profit": boolean,
   "appropriate_industry": boolean,
@@ -45,6 +46,7 @@ Rules:
 - "fully_remote": true if 100% remote.
 - "occasional_onsite_expected": true if onsite is rare (e.g., quarterly).
 - "weekly_onsite_expected": true if onsite is weekly or more.
+- "german_employment_contract": true if this is likely to be a German Arbeitsvertrag. false if employment will likely be via a third‑party provider (e.g., Deel, Remote.com, Oyster, etc.) or freelance.
 - "inhouse_position": true if NOT consulting, NOT agency, NOT freelance.
 - "post_profit": true if NOT a pre-profit startup / living off investor funds [Series B+ is OK].
 - "appropriate_industry": false if gambling, gaming, tobacco, alcohol.

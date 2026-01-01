@@ -17,6 +17,7 @@ export interface JobData {
 	fully_remote: boolean;
 	occasional_onsite_expected: boolean;
 	weekly_onsite_expected: boolean;
+	german_employment_contract: boolean;
 	inhouse_position: boolean;
 	post_profit: boolean;
 	appropriate_industry: boolean;
@@ -66,6 +67,7 @@ export function processJobData(input: string) {
 			fully_remote,
 			occasional_onsite_expected,
 			weekly_onsite_expected,
+			german_employment_contract,
 			inhouse_position,
 			post_profit,
 			appropriate_industry,
@@ -105,6 +107,7 @@ is_modern_tech_role: ${is_modern_tech_role}
 fully_remote: ${fully_remote}
 occasional_onsite_expected: ${occasional_onsite_expected}
 weekly_onsite_expected: ${weekly_onsite_expected}
+german_employment_contract: ${german_employment_contract}
 inhouse_position: ${inhouse_position}
 post_profit: ${post_profit}
 appropriate_industry: ${appropriate_industry}
