@@ -9,7 +9,7 @@ export interface JobData {
 	company_name: string;
 	forum_vibe: string;
 	job_title: string;
-	red_flags: string[];
+	complications: string[];
 	tech_stack: string[];
 	full_post: string;
 	[key: string]: unknown;
@@ -60,7 +60,7 @@ ${data.forum_vibe}
 
 ## Red Flags
 
-${(data.red_flags || []).map((flag) => `🚩 ${flag}`).join("\n")}
+${(data.complications || []).map((flag) => `🚩 ${flag}`).join("\n")}
 
 ---
 
