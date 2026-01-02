@@ -1,5 +1,6 @@
 import { writeFileSync } from "fs";
 import { join } from "path";
+import { notifyError, notifySuccess } from "./utils/notifications";
 
 const VAULT_PATH = process.env.VAULT_PATH || join(process.cwd(), "vault");
 
@@ -85,16 +86,15 @@ ${data.full_post}
 `;
 
 		writeFileSync(filePath, md, "utf8");
-		console.log("✅ Saved:", filePath);
+		notifySuccess("Job Saved", `Saved to: ${filePath}`);
 		return true;
 	} catch (err: unknown) {
-		console.error("❌ Failed to process job data.");
 		if (err instanceof SyntaxError) {
-			console.error("❌ Input is not valid JSON. Please check the format.");
+			notifyError("Invalid JSON", "The clipboard content is not valid JSON.");
 		} else if (err instanceof Error) {
-			console.error(`❌ Error: ${err.message}`);
+			notifyError("Error", err.message);
 		} else {
-			console.error("❌ An unknown error occurred.");
+			notifyError("Error", "An unknown error occurred.");
 		}
 		return false;
 	}

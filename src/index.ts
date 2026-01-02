@@ -3,6 +3,7 @@ import { simulatePaste } from "./utils/keyboard";
 import { processJobData } from "./jobseeker";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { notifyError } from "./utils/notifications";
 
 const PROMPT_FILE = join(import.meta.dir, "../assets/jobseeking_prompt.md");
 
@@ -22,7 +23,8 @@ async function main() {
 
 async function pastePrompt() {
 	if (!existsSync(PROMPT_FILE)) {
-		console.error("Prompt file not found:", PROMPT_FILE);
+		const msg = `Prompt file not found: ${PROMPT_FILE}`;
+		notifyError("File Not Found", msg);
 		return;
 	}
 
@@ -39,9 +41,12 @@ async function pastePrompt() {
 
 async function processJob() {
 	const clipboard = getClipboardText();
-	if (processJobData(clipboard)) {
-		console.log("✓ Job saved");
-	}
+	processJobData(clipboard);
 }
 
-main().catch(console.error);
+main().catch((err) => {
+	notifyError(
+		"Unexpected Error",
+		err instanceof Error ? err.message : String(err),
+	);
+});
