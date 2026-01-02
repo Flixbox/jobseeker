@@ -1,6 +1,7 @@
 import { writeFileSync } from "fs";
 import { join } from "path";
 import { notifyError, notifySuccess } from "./utils/notifications";
+import { sanitizeJson } from "./utils/json";
 
 const VAULT_PATH = process.env.VAULT_PATH || join(process.cwd(), "vault");
 
@@ -15,24 +16,7 @@ export interface JobData {
 }
 
 export function processJobData(input: string) {
-	let sanitizedInput = input.trim();
-
-	// Fix common trailing brace issue
-	if (sanitizedInput.endsWith("}")) {
-		try {
-			// If it doesn't parse but would parse without the last brace
-			JSON.parse(sanitizedInput);
-		} catch {
-			const stripped = sanitizedInput.slice(0, -1).trim();
-			try {
-				JSON.parse(stripped);
-				sanitizedInput = stripped;
-				console.log("ℹ️ Automatically removed extra trailing '}' from input.");
-			} catch {
-				// Both versions are invalid, let the original parse fail below
-			}
-		}
-	}
+	const sanitizedInput = sanitizeJson(input);
 
 	try {
 		const data: JobData = JSON.parse(sanitizedInput);

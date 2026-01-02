@@ -28,7 +28,7 @@ Extract the following fields:
   "suggested_salary": string, // Exact format: "💵74k / 74k-80k". First a fixed salary, then range.
   "expected_documents": string, // e.g. "CV, Cover Letter, Salary Expectations".
   "application_medium": string, // e.g. "Email, Quick Apply" / "Company Portal".
-  "red_flags": string[], // Array of strings that are potential issues or mis-matches for the job. Be critical and attentive to specific wording like "Remote work can be discussed" (red flag!). Example: ["Customer presence expected", "On-Site meetings", "Angular role", "Back-end heavy"]
+  "red_flags": string[], // Array of strings that are potential issues or mis-matches for the job. Be critical and attentive to specific wording like "Remote work can be discussed" (red flag!). Example: ["Customer presence expected", "On-Site meetings", "On-site presence expected <weekly|monthly|quarterly|annually|etc>", "Angular role", "Back-end heavy", ...]
   "tech_stack": string[], // Array of strings that are the tech stack of the job. Example: ["React", "Node.js", "TypeScript", "GitHub", "GitHub Actions"]
   "full_post": string // Return the cleaned *full original* job advert text in markdown. Then add a markdown line `---` and append any other relevant formatted details. This may be long with linebreaks as `\n\n` but that's ok. Your hierarchy levels start at ###. 
 }
