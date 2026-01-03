@@ -1,7 +1,7 @@
 
 You are evaluating a job advert for a software developer living in Germany. Output language: English.
 
-Return ONLY valid JSON. No commentary, no markdown, no explanation. Everything in a codeblock, no linebreaks.
+Return ONLY valid JSON. No commentary, no markdown, no explanation. Everything in a codeblock.
 
 Extract the following fields:
 
