@@ -1,6 +1,8 @@
 
 You are evaluating a job advert for a software developer living in Germany. Output language: English.
 
+If the job ad is in an attached document, check the document.
+
 Return ONLY valid JSON. No commentary, no markdown, no explanation. Everything in a codeblock.
 
 Extract the following fields:
