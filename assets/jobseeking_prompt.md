@@ -32,7 +32,7 @@ Extract the following fields:
   "application_medium": string, // e.g. "Email, Quick Apply" / "Company Portal".
   "complications": string[], // Array of strings that are potential issues or mis-matches for the job. Be critical and attentive to specific wording like "Remote work can be discussed" (red flag!). Example: ["Customer presence expected", "On-Site meetings", "On-site presence expected <weekly|monthly|quarterly|annually|etc>", "Angular role", "Back-end heavy", ...]
   "tech_stack": string[], // Array of strings that are the tech stack of the job. Example: ["React", "Node.js", "TypeScript", "GitHub", "GitHub Actions"]
-  "full_post": string // Return the cleaned *full original* job advert text in markdown. Then add a markdown line `---` and append any other relevant formatted details. This may be long with linebreaks as `\n\n` but that's ok. Append relevant hashtags with the tech stack, company name, the specific hashtag #jobseeker, and other relevant hashtags. Your hierarchy levels start at ###. 
+  "full_post": string // Return the cleaned *full original* job advert text formatted nicely in markdown. Use linebreaks like `\n\n`. Then add a markdown line `---` and append any other relevant formatted details. This may be long but that's ok. Append relevant hashtags with the tech stack, company name, the specific hashtag #jobseeker, and other relevant hashtags. Your hierarchy levels start at ###. 
 }
 
 If the job advert is from a headhunting company, you evaluate the company behind the posting. Guess if the data is unavailable.
