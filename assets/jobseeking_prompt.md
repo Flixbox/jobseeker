@@ -39,6 +39,12 @@ If the job advert is from a headhunting company, you evaluate the company behind
 
 Return ONLY the JSON object. Nothing else.
 
-Override: If it requires onsite presence weekly or more, ignore the formatting and just respond with a quote from the job post that explains the exact on-site presence.
+Override: If any of the following conditions are absolutely certainly true, ignore the formatting and just respond with quotes from the job post that explain the issue and a short explanation from you.
+
+- not a software development position
+- the job requires onsite presence weekly or more
+- customer presence required
+- the job does not offer a German Arbeitsvertrag
+- toxic environment
 
 <<clipboard>>
