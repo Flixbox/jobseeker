@@ -10,7 +10,7 @@ Extract the following fields:
 {
   "company_name": string, // The company behind the position. Fallback: `Unknown company (via ...)`. 
   "num_employees": number, // Number of employees of the company. If no data exists, guess based on company size or online data.
-  "office_location": string, // The location of the company's office. Not "Homeoffice" - The actual office address.
+  "office_location": string, // The location of the company's office. Not "Homeoffice", not my home address - The actual company office address.
   "job_title": string,
   "forum_vibe": string, // Estimate textually from forum/kununu/company reputation. If no data exists, guess based on tone.
   "forum_vibe_rating": number, // Estimate numerically from forum/kununu/company reputation. 0 = terrible, 100 = excellent. If no data exists, guess based on tone.
