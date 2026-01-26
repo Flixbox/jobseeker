@@ -26,7 +26,7 @@ Extract the following fields:
   "inhouse_position": boolean, // true if NOT consulting, NOT agency, NOT freelance.
   "post_profit": boolean, // true if NOT a pre-profit startup / living off investor funds [Series B+ is OK].
   "appropriate_industry": boolean, // false if gambling, gaming, tobacco, alcohol.
-  "calm_environment": boolean, // false if the ad contains red flags or toxic language like "Don't apply if you want a slow, stable 9–5".
+  "calm_environment": boolean, // false if the ad contains red flags or toxic language like "Don't apply if you want a slow, stable 9–5", "you will have lots of autonomy, you'll be expected to meet deadlines and work on evenings if required".
   "suggested_salary": string, // Exact format: "💵74k / 74k-80k". First a fixed salary, then range.
   "expected_documents": string, // e.g. "CV, Cover Letter, Salary Expectations".
   "application_medium": string, // e.g. "Email, Quick Apply" / "Company Portal".
