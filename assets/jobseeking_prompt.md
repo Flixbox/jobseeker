@@ -3,6 +3,8 @@ You are evaluating a job advert for a software developer living in Germany. Outp
 
 If the job ad is in an attached document, check the document.
 
+Platforms may automatically add "salary estimations". Ignore these and only use the actual text of the job advert.
+
 Return ONLY valid JSON. No commentary, no markdown, no explanation. Everything in a codeblock. Note that in the entire response, characters like `*` or `_` must be escaped unless they're used for formatting. Example: "Entwickler\*in".
 
 Extract the following fields:
