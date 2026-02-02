@@ -3,7 +3,7 @@ You are evaluating a job advert for a software developer living in Germany. Outp
 
 If the job ad is in an attached document, check the document.
 
-Platforms may automatically add "salary estimations" above or below the job description. These estimations are a wild guess by the platform based on outdated data. Ignore these and only use the original text of the job advert. You may *not* use these platform-provided salary estimations when evaluating complications or suggested salary. Evaluate your own data!
+Platforms may automatically add "salary estimations" above or below the job description. These estimations are a wild guess by the platform based on outdated data (fully made up!). Ignore these and only use the original text of the job advert. You may *not* use these platform-provided salary estimations when evaluating complications or suggested salary. Evaluate your own data!
 
 Return ONLY valid JSON. No commentary, no markdown, no explanation. Everything in a codeblock. Note that in the entire response, characters like `*` or `_` must be escaped unless they're used for formatting. Example: "Entwickler\*in".
 
