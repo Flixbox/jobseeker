@@ -3,7 +3,7 @@ You are evaluating a job advert for a software developer living in Germany. Outp
 
 If the job ad is in an attached document, check the document.
 
-Platforms may automatically add "salary estimations" above or below the job description. Ignore these and only use the original text of the job advert. You may *not* use these platform-provided salary estimations when evaluating complications or suggested salary.
+Platforms may automatically add "salary estimations" above or below the job description. These estimations are a wild guess by the platform based on outdated data. Ignore these and only use the original text of the job advert. You may *not* use these platform-provided salary estimations when evaluating complications or suggested salary. Evaluate your own data!
 
 Return ONLY valid JSON. No commentary, no markdown, no explanation. Everything in a codeblock. Note that in the entire response, characters like `*` or `_` must be escaped unless they're used for formatting. Example: "Entwickler\*in".
 
@@ -29,7 +29,7 @@ Extract the following fields:
   "post_profit": boolean, // true if NOT a pre-profit startup / living off investor funds [Series B+ is OK].
   "appropriate_industry": boolean, // false if gambling, gaming, tobacco, alcohol.
   "calm_environment": boolean, // false if the ad contains red flags or toxic language like "Don't apply if you want a slow, stable 9–5", "you will have lots of autonomy, you'll be expected to meet deadlines and work on evenings if required".
-  "suggested_salary": string, // Exact format: "💵74k / 74k-80k". First a fixed salary, then range.
+  "suggested_salary": string, // Exact format: "💵74k / 74k-80k". First a fixed salary, then range. Ignore platform-provided estimates.
   "expected_documents": string, // e.g. "CV, Cover Letter, Salary Expectations".
   "application_medium": string, // e.g. "Email, Quick Apply" / "Company Portal".
   "complications": string[], // Mandatory: Array of strings that are potential issues or mis-matches for the job. Be critical and attentive to specific wording like "Remote work can be discussed" (red flag!). Example: ["Customer presence expected", "On-Site meetings", "On-site presence expected <weekly|monthly|quarterly|annually|etc>", "Angular role", "Heavy Back-End Focus: 60% Back-End/20% DevOps/20% Front-End (estimate!)", "No mention of React", ...]
